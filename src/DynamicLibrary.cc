@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <mutex>
 #include <sstream>
 #include <string>
 
@@ -11,9 +12,21 @@
 #include "DynamicExceptions.hh"
 #include "FullPath.hh"
 
+namespace {
+  int incremental_id() {
+    static std::mutex mutex;
+    static int count = 0;
+    std::lock_guard<std::mutex> lock(mutex);
+    return count++;
+  }
+}
+
 DynamicLibrary::DynamicLibrary(std::string libname, bool unique_name) {
   if(unique_name){
-    std::string tempname = std::tmpnam(NULL);
+    std::stringstream ss;
+    ss << "/tmp/dynlib_" << getpid() << "_" << incremental_id();
+    std::string tempname = ss.str();
+
     int error = symlink(full_path(libname).c_str(), tempname.c_str());
     if(error){
       throw DynamicSymlinkCreation("Could not make temp symlink");
