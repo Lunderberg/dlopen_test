@@ -3,6 +3,9 @@
 #include <iostream>
 
 void func() {
-  std::cout << "\rgoodbye    " << std::flush;
-  //std::cout << "\rhello    " << std::flush;
+#ifdef GOODBYE
+  std::cout << "\rgoodbye      " << std::flush;
+#else
+  std::cout << "\rhello      " << std::flush;
+#endif
 }

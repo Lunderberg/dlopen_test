@@ -5,7 +5,7 @@
 
 class DynamicLibrary {
 public:
-  DynamicLibrary(const char* libname);
+  DynamicLibrary(std::string libname, bool unique_name = false);
   ~DynamicLibrary();
   DynamicLibrary(DynamicLibrary&& other);
   DynamicLibrary& operator=(DynamicLibrary&& other);

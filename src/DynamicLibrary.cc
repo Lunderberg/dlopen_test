@@ -1,16 +1,26 @@
 #include "DynamicLibrary.hh"
 
 #include <algorithm>
-#include <fstream>
 #include <iostream>
 #include <sstream>
+#include <string>
 
 #include <dlfcn.h>
+#include <unistd.h>
 
 #include "DynamicExceptions.hh"
+#include "FullPath.hh"
 
-DynamicLibrary::DynamicLibrary(const char* libname) {
-  library = dlopen(libname, RTLD_NOW);
+DynamicLibrary::DynamicLibrary(std::string libname, bool unique_name) {
+  if(unique_name){
+    std::string tempname = std::tmpnam(NULL);
+    symlink(full_path(libname).c_str(), tempname.c_str());
+    library = dlopen(tempname.c_str(), RTLD_NOW);
+    unlink(tempname.c_str());
+  } else {
+    library = dlopen(libname.c_str(), RTLD_NOW);
+  }
+
   if(!library){
     std::stringstream ss;
     ss << "DynamicFileNotFound: " << libname;

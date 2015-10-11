@@ -7,8 +7,8 @@
 typedef void* __attribute__((__may_alias__)) void_alias;
 
 DynamicCall::DynamicCall(std::string libname)
-  : libname(libname), library(new DynamicLibrary(libname.c_str())) {
-  *(void_alias*)(&func) = library->GetSymbol("func");
+  : libname(libname), library(nullptr) {
+  Reload();
 }
 
 void DynamicCall::CallFunc() {
@@ -23,8 +23,8 @@ namespace {
 
 void DynamicCall::Reload() {
   if(file_exists(libname)){
-    library = NULL;
-    library = std::unique_ptr<DynamicLibrary>(new DynamicLibrary(libname.c_str()));
+    //library = NULL;
+    library = std::unique_ptr<DynamicLibrary>(new DynamicLibrary(libname.c_str(), true));
     *(void_alias*)(&func) = library->GetSymbol("func");
   }
 }

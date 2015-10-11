@@ -11,7 +11,7 @@ AR       = ar
 RM       = rm -f
 
 # Flags to be passed to both C and C++ code
-CPPFLAGS = -Wall -Wextra -pedantic
+CPPFLAGS = -Wall -Wextra -pedantic -DMESSAGE=\"hello\"
 
 # Flags to be passed to C code
 CFLAGS   =
