@@ -14,7 +14,10 @@
 DynamicLibrary::DynamicLibrary(std::string libname, bool unique_name) {
   if(unique_name){
     std::string tempname = std::tmpnam(NULL);
-    symlink(full_path(libname).c_str(), tempname.c_str());
+    int error = symlink(full_path(libname).c_str(), tempname.c_str());
+    if(error){
+      throw DynamicSymlinkCreation("Could not make temp symlink");
+    }
     library = dlopen(tempname.c_str(), RTLD_NOW);
     unlink(tempname.c_str());
   } else {
@@ -29,10 +32,13 @@ DynamicLibrary::DynamicLibrary(std::string libname, bool unique_name) {
 }
 
 DynamicLibrary::~DynamicLibrary() {
-  dlclose(library);
+  if(library) {
+    dlclose(library);
+  }
 }
 
-DynamicLibrary::DynamicLibrary(DynamicLibrary&& other){
+DynamicLibrary::DynamicLibrary(DynamicLibrary&& other)
+  : library(NULL){
   swap(other);
 }
 

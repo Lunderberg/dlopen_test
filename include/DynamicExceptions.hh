@@ -15,4 +15,8 @@ struct DynamicSymbolNotFound : public DynamicException {
   using DynamicException::DynamicException;
 };
 
+struct DynamicSymlinkCreation : public DynamicException {
+  using DynamicException::DynamicException;
+};
+
 #endif /* _DYNAMICEXCEPTIONS_H_ */

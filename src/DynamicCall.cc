@@ -2,6 +2,8 @@
 
 #include <fstream>
 
+#include <sys/stat.h>
+
 #include "DynamicExceptions.hh"
 
 typedef void* __attribute__((__may_alias__)) void_alias;
@@ -23,8 +25,12 @@ namespace {
 
 void DynamicCall::Reload() {
   if(file_exists(libname)){
-    //library = NULL;
-    library = std::unique_ptr<DynamicLibrary>(new DynamicLibrary(libname.c_str(), true));
-    *(void_alias*)(&func) = library->GetSymbol("func");
+    struct stat buf;
+    stat(libname.c_str(), &buf);
+    if(buf.st_mtime > last_modified){
+        library = std::unique_ptr<DynamicLibrary>(new DynamicLibrary(libname.c_str(), true));
+        *(void_alias*)(&func) = library->GetSymbol("func");
+        last_modified = buf.st_mtime;
+    }
   }
 }

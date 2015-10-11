@@ -22,6 +22,7 @@ private:
   std::string libname;
   std::unique_ptr<DynamicLibrary> library;
   void(*func)();
+  time_t last_modified;
 };
 
 #endif /* _DYNAMICCALL_H_ */
