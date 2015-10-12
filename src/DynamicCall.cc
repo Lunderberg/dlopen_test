@@ -14,7 +14,10 @@ DynamicCall::DynamicCall(std::string libname)
 }
 
 void DynamicCall::CallFunc() {
-  func();
+  ObjectPassed obj;
+  obj.message = "asdf";
+  obj.value = 1234;
+  func(obj);
 }
 
 namespace {

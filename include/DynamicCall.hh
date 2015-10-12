@@ -5,6 +5,7 @@
 #include <string>
 
 #include "DynamicLibrary.hh"
+#include "ObjectPassed.hh"
 
 class DynamicCall {
 public:
@@ -21,7 +22,7 @@ public:
 private:
   std::string libname;
   std::unique_ptr<DynamicLibrary> library;
-  void(*func)();
+  void(*func)(ObjectPassed&);
   time_t last_modified;
 };
 
